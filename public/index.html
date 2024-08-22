@@ -13,39 +13,16 @@
 
 <body>
   <header>
-    <h1>OAuth Demo: Install EchoBot</h1>
+    <h1>OAuth Demo: Install UserBot</h1>
   </header>
 
 
 
   <section id="main" role="main">
-    <p>This Slack OAuth button allows your users to install the EchoBot to their Slack workspace.</p>
+    <p>This Slack OAuth button allows your users to install the UserBot to their Slack workspace.</p>
     <p>
-      <a href="https://slack.com/oauth/authorize?&client_id=18523225173.254487109014&scope=commands,users:read"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+      <a href="https://slack.com/oauth/v2/authorize?client_id=6811372476337.7571120408535&scope=app_mentions:read,channels:history,channels:read,chat:write,im:history,commands,mpim:history,groups:history&user_scope="><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
     </p>
   </section>
-  <section id="code">
-    <p>
-      Slack OAuth button HTML should look like:
-    </p>
-    <pre>
-    <code>
-&lt;a href="https://slack.com/oauth/authorize
-?client_id=xxxxxxxx.xxxxxxxx&<span>scope=commands,users:read"</span>"&gt;
-  &lt;img alt="Add to Slack" height="40" width="139"
-  src="https://platform.slack-edge.com/img/add_to_slack.png"
-  srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x,
-  https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /&gt;
-&lt;/a&gt;
-    </code>
-    </pre>
-    When you are developing the OAuth flow and something is not working, Check if you have set your scopes correctly!
-    See the OAuth.md for the complete step-by-step tutorial.
-
-  </section>
-
-  <footer>
-
-  </footer>
 </body>
 </html>
