@@ -45,8 +45,8 @@ app.get("/auth", async (req, res) => {
     );
 
     if (response.data.ok) {
-      const { access_token } = response.data;
-      storage.setItemSync("slack_access_token", access_token);
+      // const { access_token } = response.data;
+      // storage.setItemSync("slack_access_token", access_token);
       res.json({
         status: 200,
         msg: "User Authorized Successfully, Now You can use User Bot in your workspace",
