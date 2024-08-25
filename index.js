@@ -43,7 +43,8 @@ app.get("/auth", async (req, res) => {
         },
       }
     );
-
+    // console.log(response);
+    
     if (response.data.ok) {
       // const { access_token } = response.data;
       // storage.setItemSync("slack_access_token", access_token);
