@@ -28,36 +28,41 @@ const server = app.listen(process.env.PORT || 3000, () => {
 app.get("/auth", async (req, res) => {
   const code = req.query.code;
 
+  if (!code) {
+    return res.status(400).json({
+      status: 400,
+      msg: "Authorization code is missing. Please try again.",
+    });
+  }
+
   try {
     const response = await axios.post(
       "https://slack.com/api/oauth.v2.access",
-      {
-        client_id: process.env.SLACK_CLIENT_ID,
-        client_secret: process.env.SLACK_CLIENT_SECRET,
-        code,
-        redirect_uri: process.env.SLACK_REDIRECT_URI,
-      },
+      `client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${code}&redirect_uri=${process.env.SLACK_REDIRECT_URI}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }
     );
-    // console.log(response);
-    
+
     if (response.data.ok) {
-      // const { access_token } = response.data;
-      // storage.setItemSync("slack_access_token", access_token);
       res.json({
         status: 200,
-        msg: "User Authorized Successfully, Now You can use User Bot in your workspace",
+        msg: "User Authorized Successfully. You can now use the bot in your workspace.",
       });
     } else {
       console.error("Error obtaining access token:", response.data.error);
-      return null;
+      res.status(500).json({
+        status: 500,
+        msg: "Failed to obtain access token. Please try again later.",
+      });
     }
   } catch (error) {
     console.error("Error obtaining access token:", error);
-    return null;
+    res.status(500).json({
+      status: 500,
+      msg: "An error occurred while processing your request. Please try again later.",
+    });
   }
 });
