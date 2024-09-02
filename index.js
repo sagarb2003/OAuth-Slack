@@ -1,14 +1,23 @@
 "use strict";
 require("dotenv").config();
 
+const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
+const workspace = require("./workSpaceModel");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch((err) => console.error('Error connecting to MongoDB:', err));
 
 const server = app.listen(process.env.PORT || 3000, () => {
   console.log(
@@ -20,7 +29,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 // **Consider using a more robust database solution for production!**
 // const storage = require("node-persist");
-// storage.init({
+// storage.init({ 
 //   logging: true,
 // });
 
@@ -45,13 +54,39 @@ app.get("/auth", async (req, res) => {
         },
       }
     );
-
     if (response.data.ok) {
-      res.json({
-        status: 200,
-        msg: "User Authorized Successfully. You can now use the bot in your workspace.",
+      console.log(response);
+      
+      const userAccessToken = response.data.authed_user.access_token;
+      const botAccessToken = response.data.access_token;
+      const botId = response.data.bot_user_id;
+      const userId = response.data.authed_user.id;
+      const teamId = response.data.team.id;
+      const newWorkspace = new workspace({
+        userAccessToken,
+        botAccessToken,
+        botId,
+        userId,
+        teamId,
       });
-    } else {
+      newWorkspace
+        .save()
+        .then(() => {
+          console.log("Created new workspace");
+          res.json({
+            status: 200,
+            msg: "User Authorized Successfully. Workspace created.",
+          });
+        })
+        .catch((err) => {
+          console.error("Error creating workspace:", err);
+          res.status(500).json({
+            status: 500,
+            msg: "An error occurred while creating your workspace. Please try again later.",
+          });
+        });
+    } 
+    else {
       console.error("Error obtaining access token:", response.data.error);
       res.status(500).json({
         status: 500,
